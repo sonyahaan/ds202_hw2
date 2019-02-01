@@ -1,0 +1,88 @@
+---
+title: 'Homework #2'
+author: "Sonya Haan; sonyahaan"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R commands
+1. Today's temperature has a high of 15 and a low of -10 degree fahrenheit.  Find the corresponding degress in celsius and storage it in a (single) vector named `cel`. Print the variable.
+
+```{r}
+high = (15 - 32) * (5/9)
+low = (-10 - 32) * (5/9)
+cel <- c(high, low)
+```
+
+2. Create a vector of length 200. The odd entries should be 1 and even entries should be 0. Storage the created in a variable named `vec200` and print.
+
+```{r}
+vec200 = rep(c(1, 0), length.out = 200)
+vec200
+```
+
+3. How many perfect squares are there between 1 and 1001? Storage the answer in a  variable named `numPerfect` and print. You may want to look at `?round`.
+
+```{r}
+numPerfect <- floor(sqrt(1001))
+numPerfect
+```
+
+## Cars and mileage
+For this part we will use the `mpg` data set, you can access the data by loading the package `ggplot2` into your R session by executing the command 
+`library(ggplot2)`. The `mpg` data includes information about fuel economy of popular car models
+for the years 1999 and 2008 as collected by the US Environmental Protection Agency. An answer should include a short paragraph of text for the explanation to a (human) reader, together with appropriate R code, outputs, and graphs.
+
+Most exercises are from the ggplot2 book section 2.2.1. You might find it helpful for working on the homework to read through this section. *However, all questions can be solved by using just the basic R graphics functions.*
+
+1. What are the 3 most fuel-efficient models in terms of highway mileage? Storage the data frame (with 3 rows) containing all information of these three cars in a variable named `top3` and print.
+
+First, order the row indices in decreasing order according to `mpg$hwy`. Store the result in a variable `orderedIndices`. Then extract the rows of `mpg` with indices corresponding to the first 3 entries of `orderedIndices`.
+
+```{r}
+library(ggplot2)
+orderedIndices <- order(mpg$hwy, decreasing = TRUE)
+top3 <- mpg[orderedIndices[1:3], ]
+top3
+```
+
+2. How many different compact models are included in this dataset? Storage the answer in  a variable named `numCompact` and print.
+
+Extract the rows whose `class` is 'compact' and store in a data frame called `compacts`. Find the length of the vector of unique models from the `compacts` data frame.
+
+```{r}
+compacts <- mpg[mpg$class == 'compact', ]
+numCompact <- length(unique(compacts$model))
+numCompact
+```
+
+3. Create a scatterplot of `hwy` and `cty` and describe the relationship. Why are there so few points visible?
+
+There are few points visible because `hwy` and `cty` are integer values instead of doubles or floats. For this reason, many points overlap and appear as a single point on the scatterplot. Overlap could also be explained by the correlation between `hwy` and `cty`, as many cars with the same highway gas milage could have the same city gas milage as well.
+
+```{r}
+plot(mpg$hwy, mpg$cty)
+```
+
+4. Are cars in 2008 more fuel efficient than cars in 1999? Use graphs *and* summary statistics to answer this question. 
+
+Start by extracting the data for 1999 cars into a data frame `cars1999` and the data for 2008 cars into a data from `cars2008`. Then compare the summary statistics for the `hwy` and `cty` mpg for each data frame. 
+
+The median city gas milage is the same from 1999 cars and 2008 cars; however, the mean city gas milage is lower for 2008 cars than 1999 cars (0.05 mpg difference). The median highway gas milage is 1.00 mpg lower for 2008 cars than 1999 cars , but the mean highway gas milage for 1999 cars is only 0.02 mpg higher than the mean highway gas milage for 2008 cars.
+
+The summary statistics alone only show slight differences between fuel efficiency, so we look at the following histograms: `cars1999$hwy`, `cars2008$hwy`, `cars1999$cty`, and `cars2008$cty`. After looking at these histograms, we see both the `cars1999$hwy` and `cars1999$cty` appear skewed right. This means there are more cars in 1999 that had low highway gas milage and low city has milage. The histograms for `cars2008$hwy` and `cars2008$cty` appear more normally distributed. They display fewer cars with low highway gas milage and fewer cars with low city gas milage. In general, it seems the trend is cars from 2008 have better gas milage than cars from 1999.
+
+```{r}
+cars1999 = mpg[mpg$year == 1999, ]
+cars2008 = mpg[mpg$year == 2008, ]
+summary(cars1999)
+summary(cars2008)
+hist(cars1999$hwy)
+hist(cars2008$hwy)
+hist(cars1999$cty)
+hist(cars2008$cty)
+```
