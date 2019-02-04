@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 high = (15 - 32) * (5/9)
 low = (-10 - 32) * (5/9)
 cel <- c(high, low)
+cel
 ```
 
 2. Create a vector of length 200. The odd entries should be 1 and even entries should be 0. Storage the created in a variable named `vec200` and print.
@@ -70,19 +71,22 @@ plot(mpg$hwy, mpg$cty)
 
 4. Are cars in 2008 more fuel efficient than cars in 1999? Use graphs *and* summary statistics to answer this question. 
 
-Start by extracting the data for 1999 cars into a data frame `cars1999` and the data for 2008 cars into a data from `cars2008`. Then compare the summary statistics for the `hwy` and `cty` mpg for each data frame. 
+Start by extracting the data for 1999 cars into a data frame `cars1999` and the data for 2008 cars into a data frame `cars2008`. Then compare the summary statistics for the `hwy` and `cty` mpg for each data frame. 
 
-The median city gas milage is the same from 1999 cars and 2008 cars; however, the mean city gas milage is lower for 2008 cars than 1999 cars (0.05 mpg difference). The median highway gas milage is 1.00 mpg lower for 2008 cars than 1999 cars , but the mean highway gas milage for 1999 cars is only 0.02 mpg higher than the mean highway gas milage for 2008 cars.
+The median city gas milage is the same for 1999 cars and 2008 cars; however, the mean city gas milage is lower for 2008 cars than 1999 cars (0.05 mpg difference). The median highway gas milage is 1.00 mpg lower for 2008 cars than 1999 cars and the mean highway gas milage for 2008 cars is 0.02 mpg lower than the mean highway gas milage for 1999 cars.
 
-The summary statistics alone only show slight differences between fuel efficiency, so we look at the following histograms: `cars1999$hwy`, `cars2008$hwy`, `cars1999$cty`, and `cars2008$cty`. After looking at these histograms, we see both the `cars1999$hwy` and `cars1999$cty` appear skewed right. This means there are more cars in 1999 that had low highway gas milage and low city has milage. The histograms for `cars2008$hwy` and `cars2008$cty` appear more normally distributed. They display fewer cars with low highway gas milage and fewer cars with low city gas milage. In general, it seems the trend is cars from 2008 have better gas milage than cars from 1999.
+The summary statistics show only slight differences between fuel efficiency, so we look at boxplots comparing the city and highway mpg for 1999 and 2008 cars. The boxplot for cars' city mpg shows nearly no difference between 1999 cars and 2008 cars. It does show the presence of outliers in the 1999 cars which could account for the higher mean city mpg of 1999 cars compared to the mean city mpg of 2008 cars. The highway mpg boxplot also shows outliers in the 1999 cars. It also shows a more condensed 3rd quartile group for 1999 cars than for 2008 cars.
+
+Overall, the summary statistics and boxplots do not show a drastic difference between the fuel efficiency of cars from 1999 and cars from 2008. 
 
 ```{r}
 cars1999 = mpg[mpg$year == 1999, ]
 cars2008 = mpg[mpg$year == 2008, ]
+carsCompare = mpg[mpg$year == 1999 | 2008, ]
 summary(cars1999)
 summary(cars2008)
-hist(cars1999$hwy)
-hist(cars2008$hwy)
-hist(cars1999$cty)
-hist(cars2008$cty)
+boxplot(cty~year,data=carsCompare, main="City MPG Data", 
+   xlab="Year", ylab="Miles Per Gallon")
+boxplot(hwy~year,data=carsCompare, main="Highway MPG Data", 
+   xlab="Year", ylab="Miles Per Gallon")
 ```
